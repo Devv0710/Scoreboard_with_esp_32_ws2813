@@ -1,18 +1,19 @@
 #include <FastLED.h>
-//#include <stdint.h>
+#include <stdint.h>
+#include <Interfaz.h>
 
-#define PIN_CRONOMETRO 6
-#define PIN_PUNTAJE_LOCAL 7
-#define PIN_PUNTAJE_VISITANTE 8
-#define PIN_FALTAS_LOCAL 9
-#define PIN_FALTAS_VISITANTE 10
-#define PIN_PERIODO 11
+#define PIN_CRONOMETRO 5
+#define PIN_PUNTAJE_LOCAL 13
+#define PIN_PUNTAJE_VISITANTE 14
+#define PIN_FALTAS_LOCAL 18
+#define PIN_FALTAS_VISITANTE 19
+#define PIN_PERIODO 21
 
 #define NUM_DIGITOS_CRONOMETRO 4  // Número de displays
 #define NUM_DIGITOS_PUNTAJE 3
 #define NUM_DIGITOS_CONTADORES 1
 
-#define LEDS_POR_DIGITO 56  // LEDs por cada dígito
+#define LEDS_POR_DIGITO 35  // LEDs por cada dígito
 #define NUM_LEDS_CRONOMETRO (NUM_DIGITOS_CRONOMETRO * LEDS_POR_DIGITO)
 #define NUM_LEDS_PUNTAJE (NUM_DIGITOS_PUNTAJE * LEDS_POR_DIGITO)
 #define NUM_LEDS_CONTADORES (NUM_DIGITOS_CONTADORES * LEDS_POR_DIGITO)
@@ -24,27 +25,6 @@ CRGB faltas_local_display[NUM_LEDS_CONTADORES];
 CRGB faltas_visitante_display[NUM_LEDS_CONTADORES];
 CRGB periodo_display[NUM_LEDS_CONTADORES];
 
-void mostrarNumero(uint8_t num, uint8_t offset, CRGB* display);
-void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB* display);
-void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display);
-void mostrarPuntaje(uint8_t puntaje, CRGB* display);
-void procesarComando(String comando);
-
-const byte numeros[10] = {
-  B00111111, B00000110, B01011011, B01001111, B01100110,
-  B01101101, B01111101, B00000111, B01111111, B01101111
-};
-
-const uint8_t segmentos_leds[7][8] = {
-  { 0, 1, 2, 3, 4, 5, 6, 7 },
-  { 8, 9, 10, 11, 12, 13, 14, 15 },
-  { 16, 17, 18, 19, 20, 21, 22, 23 },
-  { 24, 25, 26, 27, 28, 29, 30, 31 },
-  { 32, 33, 34, 35, 36, 37, 38, 39 },
-  { 40, 41, 42, 43, 44, 45, 46, 47 },
-  { 48, 49, 50, 51, 52, 53, 54, 55 }
-};
-
 static uint8_t segundos = 0, minutos = 0;
 static uint8_t minutos_anteriores = 0, segundos_anteriores = 0;
 static uint8_t puntaje_local = 0, puntaje_visitante = 0;
@@ -53,21 +33,67 @@ static bool cronometroActivo = false;
 long inicioCronometro = 0;
 long transcurrido = 0;
 
+byte numeros[10] = {
+  B00111111,  // 0
+  B00000110,  // 1
+  B01011011,  // 2
+  B01001111,  // 3
+  B01100110,  // 4
+  B01101101,  // 5
+  B01111101,  // 6
+  B00000111,  // 7
+  B01111111,  // 8
+  B01101111   // 9
+};
+
+
+const uint8_t segmentos_leds[7][5] = {
+  { 5, 6, 7, 8, 9 },       // A
+  { 0, 1, 2, 3, 4 },       // B
+  { 20, 21, 22, 23, 24 },  // C
+  { 25, 26, 27, 28, 29 },  // D
+  { 30, 31, 32, 33, 34 },  // E
+  { 10, 11, 12, 13, 14 },  // F
+  { 15, 16, 17, 18, 19 }   // G
+};
+
+void mostrarNumero(uint8_t num, uint8_t offset, CRGB* display);
+void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB* display);
+void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display);
+void mostrarPuntaje(uint8_t puntaje, CRGB* display);
+void procesarComando(String comando);
+
 void setup() {
-  Serial.begin(9600);
-  FastLED.addLeds<WS2812, PIN_CRONOMETRO, GRB>(cronometro_display, NUM_LEDS_CRONOMETRO);
-  FastLED.addLeds<WS2812, PIN_PUNTAJE_LOCAL, GRB>(puntaje_local_display, NUM_LEDS_PUNTAJE);
-  FastLED.addLeds<WS2812, PIN_PUNTAJE_VISITANTE, GRB>(puntaje_visitante_display, NUM_LEDS_PUNTAJE);
-  FastLED.addLeds<WS2812, PIN_FALTAS_LOCAL, GRB>(faltas_local_display, NUM_LEDS_CONTADORES);
-  FastLED.addLeds<WS2812, PIN_FALTAS_VISITANTE, GRB>(faltas_visitante_display, NUM_LEDS_CONTADORES);
-  FastLED.addLeds<WS2812, PIN_PERIODO, GRB>(periodo_display, NUM_LEDS_CONTADORES);
-  FastLED.setBrightness(255);
+  setupRemoteXY();
+
+  Serial.begin(115200);
+
+  FastLED.addLeds<WS2813, PIN_CRONOMETRO, GRB>(cronometro_display, NUM_LEDS_CRONOMETRO);
+  FastLED.addLeds<WS2813, PIN_PUNTAJE_LOCAL, GRB>(puntaje_local_display, NUM_LEDS_PUNTAJE);
+  FastLED.addLeds<WS2813, PIN_PUNTAJE_VISITANTE, GRB>(puntaje_visitante_display, NUM_LEDS_PUNTAJE);
+  FastLED.addLeds<WS2813, PIN_FALTAS_LOCAL, GRB>(faltas_local_display, NUM_LEDS_CONTADORES);
+  FastLED.addLeds<WS2813, PIN_FALTAS_VISITANTE, GRB>(faltas_visitante_display, NUM_LEDS_CONTADORES);
+  FastLED.addLeds<WS2813, PIN_PERIODO, GRB>(periodo_display, NUM_LEDS_CONTADORES);
+  FastLED.setBrightness(50);
+
   FastLED.clear();
   FastLED.show();
+
+  // Activar cronómetro automáticamente
+  // cronometroActivo = true;
+  // inicioCronometro = millis();
 }
 
 
 void loop() {
+  loopRemoteXY();
+  if (RemoteXY.home_plus) {
+    if (faltas_local < 9) {
+      faltas_local++;
+      mostrarNumero(faltas_local, 0, faltas_local_display);
+      FastLED.show();
+    }
+  }
   if (cronometroActivo) {
     cronometro(minutos, segundos, cronometro_display);
   }
@@ -77,6 +103,7 @@ void loop() {
   mostrarNumero(faltas_visitante, 0, faltas_visitante_display);
   mostrarNumero(periodo, 0, periodo_display);
   FastLED.show();
+  RemoteXY_delay(1);  // Pequeña pausa para evitar watchdog reset
 
   if (Serial.available()) {
     String comando = Serial.readStringUntil('\n');
@@ -89,8 +116,7 @@ void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display) {
   static unsigned long ultimoTiempo = 0;
   unsigned long tiempoActual = millis();
 
-  if (tiempoActual - ultimoTiempo >= 1000)
-  {
+  if (tiempoActual - ultimoTiempo >= 1000) {
     ultimoTiempo = tiempoActual;
 
     long tiempoTranscurridoMS = tiempoActual - inicioCronometro + transcurrido;
@@ -98,7 +124,7 @@ void cronometro(uint8_t& minutos, uint8_t& segundos, CRGB* display) {
     long minutosTotales = segundosTotales / 60;
 
     segundos = (uint8_t)(segundosTotales % 60);
-    minutos =  (uint8_t)(minutosTotales % 60);
+    minutos = (uint8_t)(minutosTotales % 60);
     /*
     if (++segundos >= 60) {
       segundos = 0;
@@ -131,7 +157,7 @@ void mostrarNumero(uint8_t num, uint8_t offset, CRGB* display) {
   byte segmentos = numeros[num];
   for (uint8_t seg = 0; seg < 7; seg++) {
     bool encender = bitRead(segmentos, seg);
-    for (uint8_t i = 0; i < 8; i++) {
+    for (uint8_t i = 0; i < 5; i++) {
       display[segmentos_leds[seg][i] + offset] = encender ? CRGB(255, 0, 0) : CRGB::Black;
     }
   }
@@ -181,4 +207,3 @@ void procesarComando(String comando) {
     Serial.println("Comando no reconocido");
   }
 }
-
