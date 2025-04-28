@@ -40,7 +40,7 @@ struct
   uint8_t decre_falta_visitante; // =1 if button pressed, else =0
 
   // output variables
-  float cronometro;    // time in format "mm:ss" (string)
+  char cronometro[6];    // time in format "mm:ss" (string)
   uint8_t p_Local;     // -128 .. 127
   uint8_t p_Visitante; // -128 .. 127
   int8_t periodo;      // -128 .. 127
@@ -129,10 +129,10 @@ void loop()
   RemoteXY_Handler();
   handleButtons();
 
-  // if (cronometroActivo)
-  // {
-  //   cronometro(minutos, segundos, cronometro_display);
-  // }
+  if (cronometroActivo)
+  {
+    cronometro(minutos, segundos, cronometro_display);
+  }
 }
 
 void setupLeds()
@@ -176,7 +176,8 @@ void cronometro(uint8_t &minutos, uint8_t &segundos, CRGB *display)
     Serial.print("/////puntaje_local: ");
     Serial.print(puntaje_local, DEC);
     
-    RemoteXY.cronometro = (float)minutos * 100 + (float)segundos;
+    //Aca debe ir el codigo para cambiar el valor de RemoteXY.cronometro
+    snprintf(RemoteXY.cronometro, sizeof(RemoteXY.cronometro), "%02d:%02d", minutos, segundos);
 
     mostrarTiempo(minutos, segundos, display);
   }
@@ -190,14 +191,12 @@ void mostrarTiempo(uint8_t minutos, uint8_t segundos, CRGB *display)
     mostrarNumero(minutos / 10, 3 * LEDS_POR_DIGITO, display);
     mostrarNumero(minutos % 10, 2 * LEDS_POR_DIGITO, display);
     minutos_anteriores = minutos;
-    // Serial.println(minutos);
   }
   if (segundos != segundos_anteriores)
   {
     mostrarNumero(segundos / 10, 1 * LEDS_POR_DIGITO, display);
     mostrarNumero(segundos % 10, 0 * LEDS_POR_DIGITO, display);
     segundos_anteriores = segundos;
-    // Serial.println(segundos);
   }
 }
 
@@ -251,7 +250,6 @@ void handlePuntajeLocal()
     botonesPuntajeLocal[0] = false;
   }
 
-  // Manejar decremento
   if (RemoteXY.decre_punto_local == 1 && botonesPuntajeLocal[1] == false)
   {
     botonesPuntajeLocal[1] = true;
@@ -414,7 +412,6 @@ void handleCronometro()
   {
     cronometroActivo = true;
     inicioCronometro = millis();
-    cronometro(minutos, segundos, cronometro_display);
   }
   else if (RemoteXY.on_off == 0 && cronometroActivo)
   {
@@ -448,7 +445,6 @@ void actualizarRemoteXY()
   RemoteXY.f_Local = faltas_local;
   RemoteXY.f_Visitante = faltas_visitante;
   RemoteXY.periodo = periodo;
-  // RemoteXY.connect_flag = cronometroActivo ? 1 : 0;
 }
 
 void actulizarDisplay()
