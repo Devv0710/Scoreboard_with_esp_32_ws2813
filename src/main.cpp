@@ -2,50 +2,51 @@
 
 // RemoteXY GUI configuration
 #pragma pack(push, 1)
-uint8_t RemoteXY_CONF[] = // 326 bytes
-    {255, 13, 0, 9, 0, 63, 1, 19, 0, 0, 0, 0, 173, 1, 106, 200, 1, 1, 24, 0,
-     67, 28, 14, 43, 15, 78, 134, 26, 2, 67, 5, 48, 40, 15, 93, 2, 186, 2, 78, 17,
-     27, 11, 0, 1, 26, 31, 31, 79, 78, 0, 79, 70, 70, 0, 129, 41, 2, 21, 8, 64,
-     16, 84, 105, 109, 101, 114, 0, 129, 15, 37, 20, 8, 64, 16, 76, 111, 99, 97, 108, 0,
-     129, 39, 89, 28, 8, 64, 16, 80, 101, 114, 105, 111, 100, 111, 0, 1, 4, 67, 19, 15,
-     1, 135, 16, 43, 0, 1, 82, 92, 19, 15, 1, 135, 16, 43, 0, 1, 5, 154, 20, 11,
-     1, 135, 16, 43, 0, 1, 26, 67, 19, 15, 1, 36, 16, 45, 0, 1, 63, 67, 19, 15,
-     1, 135, 16, 43, 0, 1, 85, 67, 19, 15, 1, 36, 16, 45, 0, 129, 69, 37, 32, 8,
-     64, 16, 86, 105, 115, 105, 116, 97, 110, 116, 101, 0, 129, 42, 122, 22, 8, 64, 16, 70,
-     97, 108, 116, 97, 115, 0, 67, 63, 48, 40, 15, 93, 2, 186, 67, 25, 100, 54, 15, 93,
-     177, 186, 67, 6, 135, 40, 15, 93, 2, 186, 67, 62, 135, 40, 15, 93, 2, 186, 12, 4,
-     171, 97, 10, 194, 30, 186, 83, 101, 108, 101, 99, 99, 105, 111, 110, 101, 0, 70, 195, 186,
-     116, 115, 97, 108, 0, 86, 111, 108, 108, 101, 121, 0, 66, 97, 115, 107, 101, 116, 98, 97,
-     108, 108, 0, 1, 4, 185, 98, 13, 1, 27, 16, 82, 101, 105, 110, 105, 99, 105, 97, 114,
-     32, 116, 111, 100, 111, 0, 1, 82, 109, 19, 15, 1, 36, 16, 45, 0, 1, 27, 154, 20,
-     11, 1, 36, 16, 45, 0, 1, 61, 154, 20, 11, 1, 135, 16, 43, 0, 1, 83, 154, 20,
-     11, 1, 36, 16, 45, 0};
+uint8_t RemoteXY_CONF[] = // 323 bytes
+    {255, 13, 0, 12, 0, 60, 1, 19, 0, 0, 0, 0, 174, 1, 106, 200, 1, 1, 24, 0,
+     2, 79, 14, 26, 13, 0, 36, 26, 31, 31, 79, 78, 0, 79, 70, 70, 0, 129, 38, 1,
+     26, 10, 64, 16, 84, 105, 109, 101, 114, 0, 129, 14, 37, 25, 10, 64, 16, 76, 111, 99,
+     97, 108, 0, 129, 60, 37, 40, 10, 64, 16, 86, 105, 115, 105, 116, 97, 110, 116, 101, 0,
+     67, 6, 50, 44, 16, 93, 2, 200, 67, 58, 50, 44, 16, 93, 2, 200, 1, 4, 70, 21,
+     16, 1, 134, 31, 43, 0, 1, 3, 155, 21, 16, 1, 134, 31, 43, 0, 1, 59, 155, 21,
+     16, 1, 134, 31, 43, 0, 1, 58, 70, 21, 16, 1, 134, 31, 43, 0, 1, 81, 95, 21,
+     16, 1, 134, 31, 43, 0, 1, 28, 70, 21, 16, 1, 1, 31, 45, 0, 1, 82, 70, 21,
+     16, 1, 1, 31, 45, 0, 1, 27, 155, 21, 16, 1, 1, 31, 45, 0, 1, 82, 155, 21,
+     16, 1, 1, 31, 45, 0, 129, 37, 92, 35, 10, 64, 16, 80, 101, 114, 105, 111, 100, 111,
+     0, 67, 27, 103, 52, 16, 93, 190, 200, 1, 81, 112, 21, 16, 1, 1, 31, 45, 0, 129,
+     40, 126, 28, 10, 64, 16, 70, 97, 108, 116, 97, 115, 0, 67, 5, 137, 44, 16, 93, 2,
+     200, 67, 59, 137, 44, 16, 93, 2, 200, 12, 4, 173, 98, 10, 194, 30, 186, 83, 101, 108,
+     101, 99, 99, 105, 111, 110, 101, 0, 70, 117, 116, 115, 97, 108, 0, 72, 97, 110, 100, 98,
+     97, 108, 108, 0, 86, 111, 108, 108, 101, 121, 0, 1, 4, 185, 99, 13, 1, 27, 31, 82,
+     101, 105, 110, 105, 99, 105, 97, 114, 32, 116, 111, 100, 111, 0, 67, 29, 11, 47, 17, 69,
+     135, 187, 7};
 
 // this structure defines all the variables and events of your control interface
 struct
 {
+
   // input variables
-  uint8_t on_off = 0;            // =1 if switch ON and =0 if OFF
+  uint8_t on_off;                // =1 if switch ON and =0 if OFF
   uint8_t incre_punto_local;     // =1 if button pressed, else =0
-  uint8_t incre_periodo;         // =1 if button pressed, else =0
   uint8_t incre_falta_local;     // =1 if button pressed, else =0
-  uint8_t decre_punto_local;     // =1 if button pressed, else =0
+  uint8_t incre_falta_visitante; // =1 if button pressed, else =0
   uint8_t incre_punto_visitante; // =1 if button pressed, else =0
+  uint8_t incre_periodo;         // =1 if button pressed, else =0
+  uint8_t decre_punto_local;     // =1 if button pressed, else =0
   uint8_t decre_punto_visitante; // =1 if button pressed, else =0
+  uint8_t decre_falta_local;     // =1 if button pressed, else =0
+  uint8_t decre_falta_visitante; // =1 if button pressed, else =0
+  uint8_t decre_periodo;         // =1 if button pressed, else =0
   uint8_t selector;              // from 0 to 4
   uint8_t reiniciar;             // =1 if button pressed, else =0
-  uint8_t decre_periodo;         // =1 if button pressed, else =0
-  uint8_t decre_falta_local;     // =1 if button pressed, else =0
-  uint8_t incre_falta_visitante; // =1 if button pressed, else =0
-  uint8_t decre_falta_visitante; // =1 if button pressed, else =0
 
   // output variables
-  char cronometro[6];    // time in format "mm:ss" (string)
-  uint8_t p_Local;     // -128 .. 127
-  uint8_t p_Visitante; // -128 .. 127
-  int8_t periodo;      // -128 .. 127
-  int8_t f_Local;      // -128 .. 127
-  int8_t f_Visitante;  // -128 .. 127
+  int8_t p_Local;     // -128 .. 127
+  int8_t p_Visitante; // -128 .. 127
+  int8_t periodo;     // -128 .. 127
+  int8_t f_Local;     // -128 .. 127
+  int8_t f_Visitante; // -128 .. 127
+  char cronometro[7] = "00:00"; // string UTF8 end zero
 
   // other variable
   uint8_t connect_flag; // =1 if wire connected, else =0
@@ -175,8 +176,8 @@ void cronometro(uint8_t &minutos, uint8_t &segundos, CRGB *display)
     Serial.println(segundos, DEC);
     Serial.print("/////puntaje_local: ");
     Serial.print(puntaje_local, DEC);
-    
-    //Aca debe ir el codigo para cambiar el valor de RemoteXY.cronometro
+
+    // Aca debe ir el codigo para cambiar el valor de RemoteXY.cronometro
     snprintf(RemoteXY.cronometro, sizeof(RemoteXY.cronometro), "%02d:%02d", minutos, segundos);
 
     mostrarTiempo(minutos, segundos, display);
@@ -434,6 +435,14 @@ void handleReiniciar()
     transcurrido = 0;
     cronometroActivo = false;
     inicioCronometro = 0;
+    RemoteXY.on_off = 0;
+    RemoteXY.f_Local = faltas_local;
+    RemoteXY.f_Visitante = faltas_visitante;
+    RemoteXY.p_Local = puntaje_local;
+    RemoteXY.p_Visitante = puntaje_visitante;
+    RemoteXY.periodo = periodo;
+    strcpy(RemoteXY.cronometro, "00:00");
+    
     actulizarDisplay();
   }
 }
