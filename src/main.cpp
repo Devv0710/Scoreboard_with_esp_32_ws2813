@@ -41,11 +41,11 @@ struct
   uint8_t reiniciar;             // =1 if button pressed, else =0
 
   // output variables
-  int8_t p_Local;     // -128 .. 127
-  int8_t p_Visitante; // -128 .. 127
-  int8_t periodo;     // -128 .. 127
-  int8_t f_Local;     // -128 .. 127
-  int8_t f_Visitante; // -128 .. 127
+  int8_t p_Local;               // -128 .. 127
+  int8_t p_Visitante;           // -128 .. 127
+  int8_t periodo = 1;           // -128 .. 127
+  int8_t f_Local;               // -128 .. 127
+  int8_t f_Visitante;           // -128 .. 127
   char cronometro[7] = "00:00"; // string UTF8 end zero
 
   // other variable
@@ -70,11 +70,6 @@ static uint8_t faltas_local = 0, faltas_visitante = 0, periodo = 1;
 unsigned long inicioCronometro = 0;
 unsigned long transcurrido = 0;
 
-bool botonesPuntajeLocal[2] = {false, false};
-bool botonesPuntajeVisitante[2] = {false, false};
-bool botonesFaltasLocal[2] = {false, false};
-bool botonesFaltasVisitante[2] = {false, false};
-bool botonesPeriodo[2] = {false, false};
 bool cronometroActivo = false;
 
 byte NUMEROS[10] = {
@@ -106,6 +101,7 @@ void cronometro(uint8_t &minutos, uint8_t &segundos, CRGB *display);
 void mostrarPuntaje(uint8_t puntaje, CRGB *display);
 
 void setupLeds();
+void setupRemoteXY();
 void handlePuntajeLocal();
 void handlePuntajeVisitante();
 void handleFaltasLocal();
@@ -122,6 +118,7 @@ void setup()
 {
   RemoteXY_Init();
   setupLeds();
+  setupRemoteXY();
   Serial.begin(115200);
 }
 
@@ -236,9 +233,9 @@ void mostrarPuntaje(uint8_t puntaje, CRGB *display)
 
 void handlePuntajeLocal()
 {
-  if (RemoteXY.incre_punto_local == 1 && botonesPuntajeLocal[0] == false)
+  if (RemoteXY.incre_punto_local)
   {
-    botonesPuntajeLocal[0] = true;
+    RemoteXY.incre_punto_local = 0;
     if (puntaje_local < 255)
     {
       puntaje_local++;
@@ -246,14 +243,10 @@ void handlePuntajeLocal()
       RemoteXY.p_Local = puntaje_local;
     }
   }
-  if (RemoteXY.incre_punto_local == 0)
-  {
-    botonesPuntajeLocal[0] = false;
-  }
 
-  if (RemoteXY.decre_punto_local == 1 && botonesPuntajeLocal[1] == false)
+  if (RemoteXY.decre_punto_local)
   {
-    botonesPuntajeLocal[1] = true;
+    RemoteXY.decre_punto_local = 0;
     if (puntaje_local > 0)
     {
       puntaje_local--;
@@ -261,17 +254,13 @@ void handlePuntajeLocal()
       RemoteXY.p_Local = puntaje_local;
     }
   }
-  if (RemoteXY.decre_punto_local == 0)
-  {
-    botonesPuntajeLocal[1] = false;
-  }
 }
 
 void handlePuntajeVisitante()
 {
-  if (RemoteXY.incre_punto_visitante == 1 && botonesPuntajeVisitante[0] == false)
+  if (RemoteXY.incre_punto_visitante)
   {
-    botonesPuntajeVisitante[0] = true;
+    RemoteXY.incre_punto_visitante = 0;
     if (puntaje_visitante < 255)
     {
       puntaje_visitante++;
@@ -280,14 +269,9 @@ void handlePuntajeVisitante()
     }
   }
 
-  if (RemoteXY.incre_punto_visitante == 0)
+  if (RemoteXY.decre_punto_visitante)
   {
-    botonesPuntajeVisitante[0] = false;
-  }
-
-  if (RemoteXY.decre_punto_visitante == 1 && botonesPuntajeVisitante[1] == false)
-  {
-    botonesPuntajeVisitante[1] = true;
+    RemoteXY.decre_punto_visitante = 0;
     if (puntaje_visitante > 0)
     {
       puntaje_visitante--;
@@ -295,89 +279,14 @@ void handlePuntajeVisitante()
       RemoteXY.p_Visitante = puntaje_visitante;
     }
   }
-
-  if (RemoteXY.decre_punto_visitante == 0)
-  {
-    botonesPuntajeVisitante[1] = false;
-  }
-}
-
-void handleFaltasLocal()
-{
-  if (RemoteXY.incre_falta_local == 1 && botonesFaltasLocal[0] == false)
-  {
-    botonesFaltasLocal[0] = true;
-    if (faltas_local < 9)
-    {
-      faltas_local++;
-      mostrarNumero(faltas_local, 0, faltas_local_display);
-      RemoteXY.f_Local = faltas_local;
-    }
-  }
-
-  if (RemoteXY.incre_falta_local == 0)
-  {
-    botonesFaltasLocal[0] = false;
-  }
-
-  if (RemoteXY.decre_falta_local == 1 && botonesFaltasLocal[1] == false)
-  {
-    botonesFaltasLocal[1] = true;
-    if (faltas_local > 0)
-    {
-      faltas_local--;
-      mostrarNumero(faltas_local, 0, faltas_local_display);
-      RemoteXY.f_Local = faltas_local;
-    }
-  }
-
-  if (RemoteXY.decre_falta_local == 0)
-  {
-    botonesFaltasLocal[1] = false;
-  }
-}
-
-void handleFaltasVisitante()
-{
-  if (RemoteXY.incre_falta_visitante == 1 && botonesFaltasVisitante[0] == false)
-  {
-    botonesFaltasVisitante[0] = true;
-    if (faltas_visitante < 9)
-    {
-      faltas_visitante++;
-      mostrarNumero(faltas_visitante, 0, faltas_visitante_display);
-      RemoteXY.f_Visitante = faltas_visitante;
-    }
-  }
-
-  if (RemoteXY.incre_falta_visitante == 0)
-  {
-    botonesFaltasVisitante[0] = false;
-  }
-
-  if (RemoteXY.decre_falta_visitante == 1 && botonesFaltasVisitante[1] == false)
-  {
-    botonesFaltasVisitante[1] = true;
-    if (faltas_visitante > 0)
-    {
-      faltas_visitante--;
-      mostrarNumero(faltas_visitante, 0, faltas_visitante_display);
-      RemoteXY.f_Visitante = faltas_visitante;
-    }
-  }
-
-  if (RemoteXY.decre_falta_visitante == 0)
-  {
-    botonesFaltasVisitante[1] = false;
-  }
 }
 
 void handlePerido()
 {
-  if (RemoteXY.incre_periodo == 1 && botonesPeriodo[0] == false)
+  if (RemoteXY.incre_periodo)
   {
-    botonesPeriodo[0] = true;
-    if (periodo < 9)
+    RemoteXY.incre_periodo = 0;
+    if (periodo < 4)
     {
       periodo++;
       mostrarNumero(periodo, 0, periodo_display);
@@ -385,25 +294,15 @@ void handlePerido()
     }
   }
 
-  if (RemoteXY.incre_periodo == 0)
+  if (RemoteXY.decre_periodo)
   {
-    botonesPeriodo[0] = false;
-  }
-
-  if (RemoteXY.decre_periodo == 1 && botonesPeriodo[1] == false)
-  {
-    botonesPeriodo[1] = true;
-    if (periodo > 0)
+    RemoteXY.decre_periodo = 0;
+    if (periodo > 1)
     {
       periodo--;
       mostrarNumero(periodo, 0, periodo_display);
       RemoteXY.periodo = periodo;
     }
-  }
-
-  if (RemoteXY.decre_periodo == 0)
-  {
-    botonesPeriodo[1] = false;
   }
 }
 
@@ -442,8 +341,57 @@ void handleReiniciar()
     RemoteXY.p_Visitante = puntaje_visitante;
     RemoteXY.periodo = periodo;
     strcpy(RemoteXY.cronometro, "00:00");
-    
+
     actulizarDisplay();
+  }
+}
+
+void handleFaltasLocal()
+{
+  if (RemoteXY.incre_falta_local)
+  {
+    RemoteXY.incre_falta_local = 0;
+    if (faltas_local < 255)
+    {
+      faltas_local++;
+      mostrarNumero(faltas_local, 0, faltas_local_display);
+      RemoteXY.f_Local = faltas_local;
+    }
+  }
+
+  if (RemoteXY.decre_falta_local)
+  {
+    RemoteXY.decre_falta_local = 0;
+    if (faltas_local > 0)
+    {
+      faltas_local--;
+      mostrarNumero(faltas_local, 0, faltas_local_display);
+      RemoteXY.f_Local = faltas_local;
+    }
+  }
+}
+void handleFaltasVisitante()
+{
+  if (RemoteXY.incre_falta_visitante)
+  {
+    RemoteXY.incre_falta_visitante = 0;
+    if (faltas_visitante < 255)
+    {
+      faltas_visitante++;
+      mostrarNumero(faltas_visitante, 0, faltas_visitante_display);
+      RemoteXY.f_Visitante = faltas_visitante;
+    }
+  }
+
+  if (RemoteXY.decre_falta_visitante)
+  {
+    RemoteXY.decre_falta_visitante = 0;
+    if (faltas_visitante > 0)
+    {
+      faltas_visitante--;
+      mostrarNumero(faltas_visitante, 0, faltas_visitante_display);
+      RemoteXY.f_Visitante = faltas_visitante;
+    }
   }
 }
 
@@ -475,4 +423,15 @@ void handleButtons()
   handlePuntajeLocal();
   handlePuntajeVisitante();
   handleReiniciar();
+}
+
+void setupRemoteXY()
+{
+  RemoteXY.on_off = 0;
+  RemoteXY.p_Local = puntaje_local;
+  RemoteXY.p_Visitante = puntaje_visitante;
+  RemoteXY.f_Local = faltas_local;
+  RemoteXY.f_Visitante = faltas_visitante;
+  RemoteXY.periodo = periodo;
+  strcpy(RemoteXY.cronometro, "00:00");
 }
