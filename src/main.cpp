@@ -41,12 +41,12 @@ struct
   uint8_t reiniciar;             // =1 if button pressed, else =0
 
   // output variables
-  int8_t p_Local;               // -128 .. 127
-  int8_t p_Visitante;           // -128 .. 127
-  int8_t periodo = 1;           // -128 .. 127
-  int8_t f_Local;               // -128 .. 127
-  int8_t f_Visitante;           // -128 .. 127
-  char cronometro[7] = "00:00"; // string UTF8 end zero
+  int8_t p_Local;     // -128 .. 127
+  int8_t p_Visitante; // -128 .. 127
+  int8_t periodo;     // -128 .. 127
+  int8_t f_Local;     // -128 .. 127
+  int8_t f_Visitante; // -128 .. 127
+  char cronometro[7]; // string UTF8 end zero
 
   // other variable
   uint8_t connect_flag; // =1 if wire connected, else =0
@@ -126,7 +126,6 @@ void loop()
 {
   RemoteXY_Handler();
   handleButtons();
-
   if (cronometroActivo)
   {
     cronometro(minutos, segundos, cronometro_display);
@@ -324,6 +323,9 @@ void handleReiniciar()
 {
   if (RemoteXY.reiniciar == 1)
   {
+    RemoteXY.reiniciar = 0;
+    // Reiniciar el cronometro y los puntajes
+    strcpy(RemoteXY.cronometro, "00:00");
     puntaje_local = 0;
     puntaje_visitante = 0;
     faltas_local = 0;
@@ -334,13 +336,13 @@ void handleReiniciar()
     transcurrido = 0;
     cronometroActivo = false;
     inicioCronometro = 0;
+    
     RemoteXY.on_off = 0;
     RemoteXY.f_Local = faltas_local;
     RemoteXY.f_Visitante = faltas_visitante;
     RemoteXY.p_Local = puntaje_local;
     RemoteXY.p_Visitante = puntaje_visitante;
     RemoteXY.periodo = periodo;
-    strcpy(RemoteXY.cronometro, "00:00");
 
     actulizarDisplay();
   }
